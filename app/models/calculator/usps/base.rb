@@ -24,7 +24,7 @@ class Calculator::Usps::Base < Calculator::ActiveShipping
     
     # Substituting US Possession territories for USP
     faux_state = false
-    country_iso = if (faux_state = US_POSSESSIONS[addr.country.iso])
+    country_iso = if (faux_state = US_POSSESSIONS[addr.country.name])
       'US'
     else
       addr.country.iso
