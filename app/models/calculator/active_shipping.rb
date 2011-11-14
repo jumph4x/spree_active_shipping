@@ -88,8 +88,13 @@ class Calculator::ActiveShipping < Calculator
       end
 
       Rails.cache.write @cache_key, {} #write empty hash to cache to prevent constant re-lookups
-
-      raise Spree::ShippingError.new("#{I18n.t(:shipping_error)}: #{message}")
+      
+      HoptoadNotifier.notify(
+        :error_class   => "Spree::ShippingError",
+        :error_message => message,
+        :parameters    => {:origin => origin.inspect, :destination => destination.inspect}
+      )
+      return {}
     end
 
   end
@@ -109,7 +114,13 @@ class Calculator::ActiveShipping < Calculator
         message = re.message
       end
       Rails.cache.write @cache_key+'-', {} #write empty hash to cache to prevent constant re-lookups
-      raise Spree::ShippingError.new("#{I18n.t(:shipping_error)}: #{message}")
+      
+      HoptoadNotifier.notify(
+        :error_class   => "Spree::ShippingError",
+        :error_message => message,
+        :parameters    => {:origin => origin.inspect, :destination => destination.inspect}
+      )
+      return {}
     end
   end
 
